@@ -42,7 +42,7 @@ class ClaudeCodeTests(unittest.TestCase):
     def executor(self, inference):
         def execute(argv, **kwargs):
             if argv[1:] == ["--version"]:
-                return SimpleNamespace(returncode=0, stdout="fake-cli-test-only", stderr="")
+                return SimpleNamespace(returncode=0, stdout="2.1.248 (offline fixture, not Claude Code)", stderr="")
             if argv[1:] == ["auth", "status"]:
                 return SimpleNamespace(returncode=0, stdout=json.dumps({
                     "loggedIn": True, "authMethod": "claude.ai", "subscriptionType": "max",
@@ -118,6 +118,26 @@ class ClaudeCodeTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 preflight(execute=execute, env={})
             self.assertEqual(execute.call_count, 2)
+
+    def test_old_or_unknown_cli_version_is_rejected_without_inference(self):
+        for version in ("2.1.247 (Claude Code)", "unknown-version"):
+            inference = Mock()
+            base = self.executor(inference)
+            def execute(argv, **kwargs):
+                if argv[1:] == ["--version"]:
+                    return SimpleNamespace(returncode=0, stdout=version, stderr="")
+                return base(argv, **kwargs)
+            with self.assertRaisesRegex(ValueError, "2.1.248"):
+                preflight(execute=execute, env={})
+            inference.assert_not_called()
+
+    def test_invalid_utf8_from_cli_stops_and_preserves_partial_status(self):
+        inference = Mock(side_effect=UnicodeDecodeError("utf-8", b"\xff", 0, 1, "invalid"))
+        responses = load_jsonl(self.run_live_fixture(inference))
+        self.assertEqual(responses[0]["error"], "cli_output_encoding_error")
+        self.assertEqual(inference.call_count, 1)
+        self.assertEqual(load_json(self.out / "run.json")["status"], "stopped_on_error")
+        self.assertEqual(score_run(self.cases, responses)["metrics"]["missing_responses"], 1)
 
     def test_real_subprocess_fixture_roundtrip_without_model_or_network(self):
         # A local Python process emulates the external CLI. It is NOT Claude inference.

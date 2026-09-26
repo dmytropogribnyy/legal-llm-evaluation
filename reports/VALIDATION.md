@@ -1,5 +1,25 @@
 # Validation record
 
+## v0.3.2 — clean-copy and CLI workflow audit, 2026-09-26
+
+- **70 offline tests passed**, including five new regressions. New tests run actual CLI
+  subprocesses in an isolated path containing spaces: cached fetch, preparation, selection,
+  freeze, reference-free export, scoring and review-template validation. Fixtures are explicitly
+  synthetic; review CSV checks do not represent a human legal review.
+- Error paths cover modified source/cases, missing responses, overwrite rejection, unsupported
+  Claude CLI versions and undecodable subprocess output. Encoding failures stop the run and
+  preserve error/missing-task accounting instead of leaving an unfinished status.
+- Claude preflight now requires native CLI 2.1.248+ (the vendor's documented minimum for
+  `--restricted`). This does not claim live compatibility with an untested installed version.
+- A separate clean archive reproduced the original pilot and complete 509-text corpus from the
+  hash-verified cached source; its catalog exactly matched the committed summary. A 12-task
+  real-data development batch was selected, frozen and exported without a model call.
+- Ruff, compilation and the controlled evaluator self-check passed. The existing CI matrix
+  automatically includes the new CLI workflow tests; results are attached to the published commit.
+- Dataset, prompts, protocol documents, metric formulas and execution profile IDs are unchanged.
+- **Live model calls: 0. Owner legal reviews: 0.** Native Windows subscription acceptance remains
+  pending; mock CLI responses and passing offline checks are not model performance evidence.
+
 ## v0.3.1 — consistency and operator audit, 2026-09-26
 
 - Fixed acceptance of empty/duplicate case selections at freeze/verification boundaries.

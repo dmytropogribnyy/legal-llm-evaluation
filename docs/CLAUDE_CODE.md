@@ -1,6 +1,6 @@
 # Run the pilot with Claude Code in VS Code
 
-**Execution profile:** `claude-code-subscription-v1` · **Implementation:** 0.2.0.
+**Execution profile:** `claude-code-subscription-v1` · **Implementation:** 0.3.2.
 The adapter is covered by offline tests, including an actual subprocess fixture. A real Claude Code
 subscription run on the owner's Windows machine is **pending**. This evaluates Claude through a
 specified Claude Code configuration; it is not an evaluation of a client's deployed AI product.
@@ -8,7 +8,9 @@ specified Claude Code configuration; it is not an evaluation of a client's deplo
 ## What you need
 
 - Python 3.11+ and this repository opened in its own VS Code window.
-- The official **native Claude Code CLI** available as `claude` / `claude.exe` in the terminal.
+- The official **native Claude Code CLI 2.1.248 or newer** available as `claude` / `claude.exe` in the terminal.
+  Version 2.1.248 is the documented minimum for `--restricted`; preflight rejects older or
+  unrecognized versions before inference. This is a compatibility floor, not live acceptance.
   The VS Code extension alone is not a substitute for this executable. A `.cmd` / `.bat` wrapper
   is rejected to avoid shell quoting differences. Follow the vendor's native installer instructions.
 - An existing Pro or Max login through `claude auth login`. The project never extracts, copies or
@@ -60,9 +62,9 @@ allocation. It does not call the Anthropic API with a separate key, and does not
 Environment variables selecting API credentials or alternate providers are rejected by name;
 their values are never displayed. No login or account setting is changed automatically.
 
-Bounds: at most 30 CLI invocations per run, one agentic turn per invocation, 40,000 input characters
+Bounds: at most 30 CLI invocations per run, one agentic turn per invocation, a default cap of 40,000 input characters
 per contract and a 180-second subprocess timeout (configurable 30–600s). The wrapper does not retry.
-The first CLI error, quota failure, timeout or unexpected model stops subsequent tasks. Claude Code
+The first CLI error, invalid output encoding, quota failure, timeout or unexpected model stops subsequent tasks. Claude Code
 may make internal provider requests/retries: a CLI invocation is **not** a guaranteed single API
 call. There is no hard dollar or output-token cap in this transport. CLI-reported costs are estimates,
 not proof of a separate charge or an accurate subscription invoice.

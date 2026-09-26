@@ -120,6 +120,9 @@ def preflight(binary="claude", execute=subprocess.run, env=None):
             or info.get("subscriptionType") not in ("pro", "max")
             or info.get("apiKeySource") not in (None, "", "none")):
         raise ValueError("Expected Pro/Max claude.ai login without an API-key source; check auth status")
+    match = re.match(r"^(\d+)\.(\d+)\.(\d+)(?:\s|$)", version.stdout.strip())
+    if not match or tuple(map(int, match.groups())) < (2, 1, 248):
+        raise ValueError("Claude Code 2.1.248+ is required; update the native CLI and retry claude-doctor")
     # Deliberately discard email, organization IDs and all other auth fields.
     return {"binary": binary, "cli_version": version.stdout.strip(),
             "auth_method": info["authMethod"], "subscription_type": info["subscriptionType"]}
@@ -227,6 +230,8 @@ def run_bundle(bundle, model, out, max_invocations, allow_subscription_usage=Fal
                         raw = value if isinstance(value, bytes) else value.encode("utf-8")
                         (out / "raw" / f"task-{i + 1:03d}.{suffix}.partial.txt").write_bytes(raw)
                 record["error"] = "cli_timeout"
+            except UnicodeError:
+                record["error"] = "cli_output_encoding_error"
             except OSError:
                 record["error"] = "cli_process_error"
             except KeyboardInterrupt:
