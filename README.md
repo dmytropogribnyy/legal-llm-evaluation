@@ -27,12 +27,13 @@ quotes or require legal review before its output can be relied on?
 | Checks and review | JSON validity, source-supported quotes, presence/overlap checks, legal-review templates |
 | Governance | Intended-use assessment, applicability worksheet, evidence map and risk register |
 
-**Status — 26 September 2026 · v0.3.0:** full-corpus preparation and offline validation are complete.
+**Status — 26 September 2026 · v0.3.1:** full-corpus preparation and offline validation are complete.
 The source contains an exact duplicate with conflicting annotations in two categories; both conflicts
 are preserved for inspection and excluded from automatic scoring. The original 10-contract / 30-task
 pilot remains reproducible under its original protocol.
 **Live model comparison and owner legal review have not yet been performed.**
 The [validation record](reports/VALIDATION.md) distinguishes data checks from model evidence.
+The v0.3.1 audit adds stricter freeze/run consistency checks and stops OpenAI runs on the first error.
 
 **[Full corpus: inspect, select and run](docs/FULL_CORPUS_GUIDE.md)** ·
 [Verified corpus summary](data/corpus_summary.json) · [Contract index](data/corpus_index.csv)
@@ -109,6 +110,7 @@ the same frozen protocol. Record exact model IDs; do not mix development and hol
 
 The adapter is covered with a fake transport; live-provider acceptance is pending. It disables SDK
 retries, caps calls and output tokens, requests `store=False`, and preserves errors in the denominator.
+It stops on the first failed/incomplete response and records the execution settings with every result.
 Provider retention and account terms still require review before sending non-public material.
 There is no automatic dollar-budget calculation. Calls require the explicit `--allow-paid` flag.
 

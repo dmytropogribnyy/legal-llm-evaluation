@@ -30,6 +30,16 @@ def verify_case(case):
         raise ValueError("Case content changed without a new manifest")
 
 
+def validate_cases(cases):
+    if not cases or any(not isinstance(c, dict) or not isinstance(c.get("case_id"), str)
+                        or not c["case_id"].strip() for c in cases):
+        raise ValueError("Cases require nonempty string IDs")
+    if len({c["case_id"] for c in cases}) != len(cases):
+        raise ValueError("Duplicate case IDs")
+    for case in cases:
+        verify_case(case)
+
+
 def assess(case, raw_output):
     result = {"case_id": case["case_id"], "category": case["category"],
               "split": case["split"], "schema_valid": False,
@@ -73,12 +83,14 @@ def assess(case, raw_output):
 
 
 def score_run(cases, responses, expected_prompt_sha256=None):
+    validate_cases(cases)
     index = {c["case_id"]: c for c in cases}
-    if len(index) != len(cases) or not cases:
-        raise ValueError("Empty or duplicate case IDs")
-    for case in cases:
-        verify_case(case)
-    seen, rows, run_keys = set(), [], set()
+    splits = {c["split"] for c in cases}
+    protocols = {(c.get("selection_protocol", "legacy-or-fixture"),
+                  c.get("selection_protocol_sha256", "")) for c in cases}
+    if len(splits) != 1 or len(protocols) != 1:
+        raise ValueError("Mixed splits or selection protocols: use separate reports")
+    seen, rows, run_keys, returned_models = set(), [], set(), set()
     for response in responses:
         case_id = response["case_id"]
         if case_id not in index or case_id in seen:
@@ -92,9 +104,19 @@ def score_run(cases, responses, expected_prompt_sha256=None):
         if response.get("provenance") not in ("live_api", "imported", "synthetic_fixture"):
             raise ValueError("Explicit response provenance is required")
         profile = response.get("execution_profile_sha256", "")
-        if response.get("provider") == "claude_code_cli" and not profile:
-            raise ValueError("Claude Code responses need an execution profile binding")
-        run_keys.add((response["model"], response["prompt_sha256"], response["provenance"], profile))
+        if response.get("provider") in ("claude_code_cli", "openai") and not profile:
+            raise ValueError("Native adapter responses need an execution profile binding")
+        run_keys.add((response["model"], response["prompt_sha256"], response["provenance"],
+                      profile, response.get("provider", "unspecified")))
+        if not response.get("error"):
+            resolved = response.get("returned_models", [])
+            if not isinstance(resolved, list) or not all(isinstance(m, str) and m for m in resolved):
+                raise ValueError("Invalid returned model metadata")
+            returned_models.update(resolved)
+            if response.get("returned_model"):
+                if not isinstance(response["returned_model"], str):
+                    raise ValueError("Invalid returned model metadata")
+                returned_models.add(response["returned_model"])
         if response.get("error"):
             row = assess(case, "")
             row["flags"] = ["provider_error"]
@@ -102,8 +124,8 @@ def score_run(cases, responses, expected_prompt_sha256=None):
             row = assess(case, response["raw_output"])
         row["response_sha256"] = digest(canonical(response))
         rows.append(row)
-    if len(run_keys) > 1:
-        raise ValueError("Mixed model, prompt, provenance or execution profile: use separate reports")
+    if len(run_keys) > 1 or len(returned_models) > 1:
+        raise ValueError("Mixed model, provider, prompt, provenance or execution profile: use separate reports")
     for case_id in sorted(set(index) - seen):
         row = assess(index[case_id], "")
         row["flags"] = ["missing_response"]
@@ -134,6 +156,10 @@ def score_run(cases, responses, expected_prompt_sha256=None):
             "schema_valid_count": sum(r["schema_valid"] for r in subset),
             "flags": dict(Counter(f for r in subset for f in r["flags"])),
         }
-    return {"metrics": metrics, "by_category": category_metrics,
+    return {"scope": {"split": next(iter(splits)), "selection_protocol": next(iter(protocols))[0],
+                      "selection_protocol_sha256": next(iter(protocols))[1],
+                      "expected_tasks": len(cases)},
+            "returned_models": sorted(returned_models),
+            "metrics": metrics, "by_category": category_metrics,
             "rows": rows, "model_run": list(next(iter(run_keys)))
             if run_keys else None, "conclusion": "Human legal review required; no release verdict"}

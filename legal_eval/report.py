@@ -23,6 +23,9 @@ def export_report(report, out):
     lines = [f"# {title}", "", f"**Response provenance:** {label}",
              f"**Model label:** {run[0] if run else 'none'}",
              f"**Execution profile SHA-256:** {run[3] if run and len(run) > 3 and run[3] else 'not supplied'}", "",
+             f"**Split:** {report.get('scope', {}).get('split', 'not recorded')}",
+             f"**Selection protocol:** {report.get('scope', {}).get('selection_protocol', 'not recorded')}",
+             f"**Successful returned model IDs:** {', '.join(report.get('returned_models', [])) or 'not recorded'}", "",
              "Human legal review is pending. These metrics do not establish legal correctness,",
              "model superiority, client acceptance, or EU AI Act compliance.", "",
              "| Metric | Value |", "|---|---|"]
@@ -58,7 +61,12 @@ def validate_reviews(report, csv_file):
     expected = {r["case_id"]: r["response_sha256"] for r in report["rows"]}
     seen = set()
     with Path(csv_file).open(encoding="utf-8", newline="") as f:
-        for row in csv.DictReader(f):
+        reader = csv.DictReader(f)
+        if not reader.fieldnames or len(set(reader.fieldnames)) != len(reader.fieldnames) or not set(REVIEW_FIELDS) <= set(reader.fieldnames):
+            raise ValueError("Review CSV is missing required columns or has duplicate headers")
+        for row in reader:
+            if None in row or any(row.get(field) is None for field in REVIEW_FIELDS):
+                raise ValueError("Malformed review CSV row; check missing cells and quoted commas")
             case_id = row["case_id"]
             if case_id in seen or case_id not in expected:
                 raise ValueError("Unknown/duplicate human review")

@@ -149,6 +149,8 @@ def main():
             print(run_openai(cases, args.prompt, args.frozen, args.model, args.out,
                              args.allow_paid, args.max_calls, args.max_output_tokens,
                              max_context_characters=args.max_context_characters))
+            if load_json(Path(args.out) / "run.json")["status"] != "completed":
+                raise SystemExit("Run stopped on an error; retained results must be scored as partial")
         else:
             responses = load_jsonl(args.responses)
             report = score_run(cases, responses, frozen["prompt_sha256"])

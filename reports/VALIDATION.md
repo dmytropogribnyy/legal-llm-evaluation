@@ -1,5 +1,28 @@
 # Validation record
 
+## v0.3.1 — consistency and operator audit, 2026-09-26
+
+- Fixed acceptance of empty/duplicate case selections at freeze/verification boundaries.
+  Duplicate inputs now fail before any provider invocation.
+- Bound full-corpus selection-document verification at both freeze and scoring entrypoints,
+  in addition to existing prompt/rubric checks. Mixed pilot/full-corpus freezes are rejected.
+- Scoring rejects mixed development/holdout, selection revisions, providers and returned
+  OpenAI model IDs, preventing incompatible results from entering one report.
+- Added OpenAI execution profile `openai-responses-v1`: output/context caps, model, JSON mode,
+  timeout, retry policy and store flag. Different configurations cannot be pooled silently.
+- OpenAI now stops on the first error/incomplete output/operator interruption, saves final run
+  status and preserves attempted/error/missing cases. CLI failures return a nonzero exit status.
+- Reports show the split, selection protocol and returned model IDs. Malformed human-review
+  CSVs now produce actionable validation errors instead of uncaught missing-cell/header errors.
+- **65 offline tests passed**, including 14 new audit regressions. Fake provider receipts are
+  controlled fixtures, not real inference. Ruff, compilation and offline self-check passed.
+- Full-corpus metadata and the 20,867-task pool remain unchanged. Original pilot prompt,
+  both selection documents, rubric and numerical metric formulas are unchanged. Previously
+  mixed runs that passed loose validation must be separated and rescored.
+- Full-source catalog verified against the committed summary/index, with existing v0.3.0
+  batch freezes still valid. CI results are available on the exact published commit.
+- Live model calls and owner legal reviews during this audit: **0**.
+
 ## v0.3.0 — full CUAD corpus, 2026-09-26
 
 - 51 offline tests passed locally; Ruff, compilation and evaluator self-check passed.
