@@ -1,0 +1,39 @@
+{
+  "date": "2026-09-26",
+  "software_version": "0.3.0",
+  "protocol": "cuad-full-corpus-v1",
+  "source_sha256": "ed0b77d85bdf4014d7495800e8e4a70565b48ee6f8a2e5dca9cf8655dbf10eae",
+  "catalog_sha256": "ba39155507f1e21ca1ba0f5f2451c20ef28ad63cd5a15518a1f6ee35d745c3e4",
+  "source_records": 510,
+  "unique_contracts": 509,
+  "source_tasks": 20910,
+  "eligible_tasks": 20867,
+  "categories": 41,
+  "invalid_source_offsets": 0,
+  "contradictory_presence_labels": 0,
+  "duplicate_tasks_suppressed": 41,
+  "ambiguous_unique_tasks_quarantined": 2,
+  "all_pilot_splits_preserved": true,
+  "exact_text_cross_split_overlap": 0,
+  "default_context_unique_contracts": 293,
+  "full_context_unique_contracts": 509,
+  "two_development_pages": {
+    "cases": 60,
+    "categories": 41,
+    "duplicate_case_ids": 0
+  },
+  "longest_full_context_characters": 338211,
+  "longest_export_roundtrip": "passed",
+  "provider_payload_keys": [
+    "question",
+    "contract"
+  ],
+  "offline_tests": 51,
+  "live_model_invocations": 0,
+  "owner_legal_reviews": 0,
+  "notes": [
+    "Corpus preparation is not model performance evidence.",
+    "No near-duplicate or issuer-family split is claimed.",
+    "No external client engagement is asserted."
+  ]
+}

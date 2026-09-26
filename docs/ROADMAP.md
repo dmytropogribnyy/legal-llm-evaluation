@@ -45,3 +45,12 @@ recipient feedback. A paid or pro bono commission can be described as such once 
 Full RAG retrieval evaluation, model training, OCR, large benchmarks, inter-rater reliability,
 production monitoring, comprehensive adversarial testing, conformity assessment and legal advice
 on enforceability. Add only when required by a concrete next engagement.
+
+## Delivered in v0.3.0
+
+Full CUAD catalog, 509 unique complete texts / 41 categories, deduplication and
+annotation-conflict quarantine, preserved pilot splits, bounded category-filtered
+batches, full-text inspection and explicit long-context support. Real-model runs
+and owner legal review remain the next evidence milestone. Further source families
+(e.g. contract inference rather than clause extraction) require their own adapters
+and scoring protocols before their counts can be combined meaningfully.

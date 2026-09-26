@@ -40,3 +40,18 @@ Client data requires separate authorization, provider assessment and a private w
   deployment context, not the law governing the sampled contracts.
 
 Published preparation checks are reproducible with `python -m legal_eval fetch` and `prepare`.
+
+## Full-corpus expansion — v0.3.0
+
+The original pilot above remains unchanged. `prepare-corpus` now catalogs the complete
+pinned source: 510 records, 509 exact unique texts and all 41 categories / 20,910
+source tasks. Text is stored once per hash. Every source answer offset and presence
+label is checked. The ADURO duplicate has two conflicting categories; original
+annotations are retained, duplicates and conflicts excluded from automatic runs.
+The resulting evaluation pool is 20,867 tasks.
+
+The generated [summary](../data/corpus_summary.json) publishes per-category positive
+and negative counts for the 404 development / 105 holdout contracts. Document Name
+has no negative examples; Parties has no holdout negatives. Aggregate scores must
+not imply balanced coverage. Full texts remain local, with unchanged source attribution
+and redistribution limitations. See the [separate selection protocol](FULL_CORPUS_PROTOCOL.md).

@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .common import canonical, digest, load_json, save_json, timestamp
 from .evaluate import verify_case
+from .corpus import context_limit
 
 
 def freeze(cases, prompt_file, destination, rubric_file="docs/EVALUATION_PROTOCOL.md"):
@@ -46,15 +47,17 @@ def provider_input(case):
 
 
 def run_openai(cases, prompt_file, frozen_file, model, out,
-               allow_paid=False, max_calls=0, max_output_tokens=1200, client=None):
+               allow_paid=False, max_calls=0, max_output_tokens=1200, client=None,
+               max_context_characters=40000):
+    context_limit(max_context_characters)
     if not allow_paid:
         raise ValueError("Live calls need --allow-paid; offline commands use no API")
     if not model or not cases or max_calls < len(cases) or max_calls > 30:
         raise ValueError("Supply a model and a call cap covering the selected cases (maximum 30)")
     if not 128 <= max_output_tokens <= 4000:
         raise ValueError("Output token cap must be 128..4000")
-    if any(len(c["context"]) > 40_000 for c in cases):
-        raise ValueError("Input exceeds 40,000 characters; no silent truncation")
+    if any(len(c["context"]) > max_context_characters for c in cases):
+        raise ValueError("Input exceeds selected context character limit; no silent truncation")
     frozen = verify_freeze(cases, prompt_file, frozen_file)
     out = Path(out)
     out.mkdir(parents=True, exist_ok=False)
@@ -69,6 +72,7 @@ def run_openai(cases, prompt_file, frozen_file, model, out,
         "prompt_sha256": frozen["prompt_sha256"],
         "freeze_sha256": digest(Path(frozen_file).read_bytes()),
         "max_calls": max_calls, "max_output_tokens": max_output_tokens,
+        "max_context_characters": max_context_characters,
         "max_retries": 0, "store": False, "cost_usd": None,
         "cost_note": "Token/call caps are enforced; no dollar budget or free usage is claimed.",
     })

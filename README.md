@@ -10,25 +10,32 @@ error analysis, and practical evidence mapping for AI governance.
 independently initiated service pilot using published commercial-contract data. It does not disclose
 client work or represent an external commission.
 
-## Contract review pilot
+## Contract evaluation corpus
 
-**Decision supported:** what errors and review controls must a legal team understand before relying
-on an AI assistant to identify liability caps, termination-for-convenience clauses, and governing law?
+**Decision supported:** where does a contract-review AI miss material provisions, invent supporting
+quotes or require legal review before its output can be relied on?
 
 | Scope | Current implementation |
 |---|---|
-| Source material | CUAD v1: published commercial contracts with publisher-provided expert annotations |
-| Fixed selection | 10 contracts, 30 tasks; complete supplied text, no gold-guided excerpts |
-| Development / evaluation | 3 contracts / 9 tasks for development; 7 contracts / 21 tasks held out locally |
-| Automated checks | JSON structure, reference-label agreement, quote support, reference-span overlap, missing responses |
-| Human review | Legal accuracy, material omissions, unsupported reasoning, uncertainty, severity and acceptance |
-| Governance work | Intended-use assessment, applicability worksheet, evidence map, risk register and gaps |
+| Full source catalog | 510 CUAD document records; **509 unique complete contract texts** |
+| Coverage | **41 categories; 20,910 source question/contract pairs** |
+| Evaluation pool | **20,867 tasks** after exact deduplication and conflicting-annotation exclusions |
+| Development / holdout | 404 / 105 unique contracts; original ten pilot assignments preserved |
+| Inspection | Full texts, reference offsets, provenance, searchable contract index and category coverage |
+| Execution | Reproducible batches of 1–30 tasks; OpenAI API or local Claude Code adapter |
+| Long documents | Complete texts up to 338,211 characters; explicit context-limit opt-in |
+| Checks and review | JSON validity, source-supported quotes, presence/overlap checks, legal-review templates |
+| Governance | Intended-use assessment, applicability worksheet, evidence map and risk register |
 
-**Status — 26 September 2026 · v0.2.0:** data preparation, offline evaluation, reports, review templates,
-an OpenAI adapter and a local Claude Code subscription adapter are implemented. Public-source hashes
-and the fixed selection have been verified. Both transports have offline test coverage;
-**live model acceptance, comparison and owner legal review have not yet been performed.**
-The [validation record](reports/VALIDATION.md) separates completed checks from remaining work.
+**Status — 26 September 2026 · v0.3.0:** full-corpus preparation and offline validation are complete.
+The source contains an exact duplicate with conflicting annotations in two categories; both conflicts
+are preserved for inspection and excluded from automatic scoring. The original 10-contract / 30-task
+pilot remains reproducible under its original protocol.
+**Live model comparison and owner legal review have not yet been performed.**
+The [validation record](reports/VALIDATION.md) distinguishes data checks from model evidence.
+
+**[Full corpus: inspect, select and run](docs/FULL_CORPUS_GUIDE.md)** ·
+[Verified corpus summary](data/corpus_summary.json) · [Contract index](data/corpus_index.csv)
 
 ## What an engagement delivers
 
@@ -53,8 +60,8 @@ python -m legal_eval demo --out runs/self-check
 ```
 
 The self-check uses four **controlled fixtures** to demonstrate detection of missing provisions and
-unsupported quotes. Its scores describe the evaluator checks, not an LLM's performance. The actual
-pilot uses the public contract selection below.
+unsupported quotes. Its scores describe the evaluator checks, not an LLM's performance. The commands below reproduce the original pilot. For the full corpus, follow the
+[full-corpus guide](docs/FULL_CORPUS_GUIDE.md).
 
 ```bash
 # Downloads approximately 40 MB from the publisher's pinned Hugging Face revision.
@@ -74,7 +81,8 @@ reference-free input bundles, starts a fresh restricted CLI session for each tas
 responses and feeds them to the same evaluator. It requires an explicit model ID and usage opt-in.
 
 **[Step-by-step PowerShell instructions](docs/CLAUDE_CODE.md)** cover preparation, subscription
-preflight, nine development tasks, scoring and human review. No separate Anthropic API key is used.
+preflight, the original nine development tasks, scoring and human review. The
+[full-corpus guide](docs/FULL_CORPUS_GUIDE.md) adds larger selections and long documents. No separate Anthropic API key is used.
 Account limits and any enabled extra usage still apply. Run inference from an ordinary VS Code
 terminal, outside the coding agent's own session. The VS Code **Run Task** menu also includes offline
 tests and the no-inference subscription preflight.
@@ -119,8 +127,9 @@ legal judgment. Other providers can be evaluated using the documented [response 
 
 - A quote appearing in a contract does not establish that the model interpreted it correctly.
 - CUAD labels are reference annotations, not a determination of enforceability or an exhaustive legal opinion.
-- Thirty tasks support a bounded pilot, not claims of general model superiority. Public benchmark exposure
-  during model training is unknown; the local holdout is not guaranteed unseen to model providers.
+- Corpus size is not evidence of model quality. Scores apply only to the tasks actually run and reviewed.
+  Public benchmark exposure during training is unknown; the local holdout is not guaranteed unseen.
+- Exact deduplication does not remove near-duplicates, related amendments or issuer-family overlap.
 - AI Act mapping starts with intended use and applicability. A contract-review tool is not automatically
   high-risk because it operates in a legal domain. The mapping is readiness support, not certification.
 
@@ -129,6 +138,8 @@ legal judgment. Other providers can be evaluated using the documented [response 
 | Document | Use |
 |---|---|
 | [Engagement brief](docs/ENGAGEMENT_BRIEF.md) | Business question, deliverables and acceptance |
+| [Full-corpus guide](docs/FULL_CORPUS_GUIDE.md) | Inspect all contracts and prepare bounded execution batches |
+| [Full-corpus protocol](docs/FULL_CORPUS_PROTOCOL.md) | Splits, duplicates, conflicts, context and coverage |
 | [Evaluation protocol](docs/EVALUATION_PROTOCOL.md) | Sampling, metrics, rubric and interpretation |
 | [Data provenance](docs/DATA_CARD.md) | CUAD attribution, licenses, selection and limitations |
 | [Operator runbook](docs/RUNBOOK.md) | Execution, comparison, review and evidence release |

@@ -1,0 +1,504 @@
+{
+  "protocol": "cuad-full-corpus-v1",
+  "dataset_sha256": "ed0b77d85bdf4014d7495800e8e4a70565b48ee6f8a2e5dca9cf8655dbf10eae",
+  "dataset_revision": "a3c393f5d103fd0c516374e4fdff676c8176dcb1",
+  "source_url": "https://huggingface.co/datasets/theatticusproject/cuad/resolve/a3c393f5d103fd0c516374e4fdff676c8176dcb1/CUAD_v1/CUAD_v1.json",
+  "source_document_records": 510,
+  "unique_contract_texts": 509,
+  "source_tasks": 20910,
+  "eligible_deduplicated_tasks": 20867,
+  "duplicate_suppressed_tasks": 41,
+  "conflicting_unique_contract_categories": 2,
+  "conflicts": [
+    {
+      "contract_sha256": "23255988c8f39e0b67d7ff8a2b316a17c3bf4cc0557141d6a7e6e9cc7d770ad3",
+      "category": "Anti-Assignment",
+      "titles": [
+        "ADUROBIOTECH,INC_06_02_2020-EX-10.7-CONSULTING AGREEMENT",
+        "ADUROBIOTECH,INC_06_02_2020-EX-10.7-CONSULTING AGREEMENT(1)"
+      ]
+    },
+    {
+      "contract_sha256": "23255988c8f39e0b67d7ff8a2b316a17c3bf4cc0557141d6a7e6e9cc7d770ad3",
+      "category": "Exclusivity",
+      "titles": [
+        "ADUROBIOTECH,INC_06_02_2020-EX-10.7-CONSULTING AGREEMENT",
+        "ADUROBIOTECH,INC_06_02_2020-EX-10.7-CONSULTING AGREEMENT(1)"
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "category": "Affiliate License-Licensee",
+      "development": {
+        "positive": 42,
+        "negative": 362
+      },
+      "holdout": {
+        "positive": 17,
+        "negative": 88
+      }
+    },
+    {
+      "category": "Affiliate License-Licensor",
+      "development": {
+        "positive": 16,
+        "negative": 388
+      },
+      "holdout": {
+        "positive": 7,
+        "negative": 98
+      }
+    },
+    {
+      "category": "Agreement Date",
+      "development": {
+        "positive": 373,
+        "negative": 31
+      },
+      "holdout": {
+        "positive": 96,
+        "negative": 9
+      }
+    },
+    {
+      "category": "Anti-Assignment",
+      "development": {
+        "positive": 293,
+        "negative": 110
+      },
+      "holdout": {
+        "positive": 80,
+        "negative": 25
+      }
+    },
+    {
+      "category": "Audit Rights",
+      "development": {
+        "positive": 162,
+        "negative": 242
+      },
+      "holdout": {
+        "positive": 52,
+        "negative": 53
+      }
+    },
+    {
+      "category": "Cap On Liability",
+      "development": {
+        "positive": 216,
+        "negative": 188
+      },
+      "holdout": {
+        "positive": 59,
+        "negative": 46
+      }
+    },
+    {
+      "category": "Change Of Control",
+      "development": {
+        "positive": 97,
+        "negative": 307
+      },
+      "holdout": {
+        "positive": 24,
+        "negative": 81
+      }
+    },
+    {
+      "category": "Competitive Restriction Exception",
+      "development": {
+        "positive": 56,
+        "negative": 348
+      },
+      "holdout": {
+        "positive": 20,
+        "negative": 85
+      }
+    },
+    {
+      "category": "Covenant Not To Sue",
+      "development": {
+        "positive": 72,
+        "negative": 332
+      },
+      "holdout": {
+        "positive": 28,
+        "negative": 77
+      }
+    },
+    {
+      "category": "Document Name",
+      "development": {
+        "positive": 404,
+        "negative": 0
+      },
+      "holdout": {
+        "positive": 105,
+        "negative": 0
+      }
+    },
+    {
+      "category": "Effective Date",
+      "development": {
+        "positive": 304,
+        "negative": 100
+      },
+      "holdout": {
+        "positive": 85,
+        "negative": 20
+      }
+    },
+    {
+      "category": "Exclusivity",
+      "development": {
+        "positive": 137,
+        "negative": 266
+      },
+      "holdout": {
+        "positive": 42,
+        "negative": 63
+      }
+    },
+    {
+      "category": "Expiration Date",
+      "development": {
+        "positive": 319,
+        "negative": 85
+      },
+      "holdout": {
+        "positive": 93,
+        "negative": 12
+      }
+    },
+    {
+      "category": "Governing Law",
+      "development": {
+        "positive": 342,
+        "negative": 62
+      },
+      "holdout": {
+        "positive": 94,
+        "negative": 11
+      }
+    },
+    {
+      "category": "Insurance",
+      "development": {
+        "positive": 130,
+        "negative": 274
+      },
+      "holdout": {
+        "positive": 36,
+        "negative": 69
+      }
+    },
+    {
+      "category": "Ip Ownership Assignment",
+      "development": {
+        "positive": 95,
+        "negative": 309
+      },
+      "holdout": {
+        "positive": 28,
+        "negative": 77
+      }
+    },
+    {
+      "category": "Irrevocable Or Perpetual License",
+      "development": {
+        "positive": 57,
+        "negative": 347
+      },
+      "holdout": {
+        "positive": 13,
+        "negative": 92
+      }
+    },
+    {
+      "category": "Joint Ip Ownership",
+      "development": {
+        "positive": 39,
+        "negative": 365
+      },
+      "holdout": {
+        "positive": 7,
+        "negative": 98
+      }
+    },
+    {
+      "category": "License Grant",
+      "development": {
+        "positive": 196,
+        "negative": 208
+      },
+      "holdout": {
+        "positive": 59,
+        "negative": 46
+      }
+    },
+    {
+      "category": "Liquidated Damages",
+      "development": {
+        "positive": 49,
+        "negative": 355
+      },
+      "holdout": {
+        "positive": 12,
+        "negative": 93
+      }
+    },
+    {
+      "category": "Minimum Commitment",
+      "development": {
+        "positive": 130,
+        "negative": 274
+      },
+      "holdout": {
+        "positive": 35,
+        "negative": 70
+      }
+    },
+    {
+      "category": "Most Favored Nation",
+      "development": {
+        "positive": 22,
+        "negative": 382
+      },
+      "holdout": {
+        "positive": 6,
+        "negative": 99
+      }
+    },
+    {
+      "category": "No-Solicit Of Customers",
+      "development": {
+        "positive": 26,
+        "negative": 378
+      },
+      "holdout": {
+        "positive": 8,
+        "negative": 97
+      }
+    },
+    {
+      "category": "No-Solicit Of Employees",
+      "development": {
+        "positive": 45,
+        "negative": 359
+      },
+      "holdout": {
+        "positive": 13,
+        "negative": 92
+      }
+    },
+    {
+      "category": "Non-Compete",
+      "development": {
+        "positive": 97,
+        "negative": 307
+      },
+      "holdout": {
+        "positive": 22,
+        "negative": 83
+      }
+    },
+    {
+      "category": "Non-Disparagement",
+      "development": {
+        "positive": 29,
+        "negative": 375
+      },
+      "holdout": {
+        "positive": 9,
+        "negative": 96
+      }
+    },
+    {
+      "category": "Non-Transferable License",
+      "development": {
+        "positive": 102,
+        "negative": 302
+      },
+      "holdout": {
+        "positive": 36,
+        "negative": 69
+      }
+    },
+    {
+      "category": "Notice Period To Terminate Renewal",
+      "development": {
+        "positive": 86,
+        "negative": 318
+      },
+      "holdout": {
+        "positive": 25,
+        "negative": 80
+      }
+    },
+    {
+      "category": "Parties",
+      "development": {
+        "positive": 403,
+        "negative": 1
+      },
+      "holdout": {
+        "positive": 105,
+        "negative": 0
+      }
+    },
+    {
+      "category": "Post-Termination Services",
+      "development": {
+        "positive": 139,
+        "negative": 265
+      },
+      "holdout": {
+        "positive": 43,
+        "negative": 62
+      }
+    },
+    {
+      "category": "Price Restrictions",
+      "development": {
+        "positive": 13,
+        "negative": 391
+      },
+      "holdout": {
+        "positive": 2,
+        "negative": 103
+      }
+    },
+    {
+      "category": "Renewal Term",
+      "development": {
+        "positive": 139,
+        "negative": 265
+      },
+      "holdout": {
+        "positive": 37,
+        "negative": 68
+      }
+    },
+    {
+      "category": "Revenue/Profit Sharing",
+      "development": {
+        "positive": 136,
+        "negative": 268
+      },
+      "holdout": {
+        "positive": 30,
+        "negative": 75
+      }
+    },
+    {
+      "category": "Rofr/Rofo/Rofn",
+      "development": {
+        "positive": 71,
+        "negative": 333
+      },
+      "holdout": {
+        "positive": 14,
+        "negative": 91
+      }
+    },
+    {
+      "category": "Source Code Escrow",
+      "development": {
+        "positive": 9,
+        "negative": 395
+      },
+      "holdout": {
+        "positive": 4,
+        "negative": 101
+      }
+    },
+    {
+      "category": "Termination For Convenience",
+      "development": {
+        "positive": 147,
+        "negative": 257
+      },
+      "holdout": {
+        "positive": 35,
+        "negative": 70
+      }
+    },
+    {
+      "category": "Third Party Beneficiary",
+      "development": {
+        "positive": 21,
+        "negative": 383
+      },
+      "holdout": {
+        "positive": 11,
+        "negative": 94
+      }
+    },
+    {
+      "category": "Uncapped Liability",
+      "development": {
+        "positive": 83,
+        "negative": 321
+      },
+      "holdout": {
+        "positive": 28,
+        "negative": 77
+      }
+    },
+    {
+      "category": "Unlimited/All-You-Can-Eat-License",
+      "development": {
+        "positive": 13,
+        "negative": 391
+      },
+      "holdout": {
+        "positive": 4,
+        "negative": 101
+      }
+    },
+    {
+      "category": "Volume Restriction",
+      "development": {
+        "positive": 62,
+        "negative": 342
+      },
+      "holdout": {
+        "positive": 20,
+        "negative": 85
+      }
+    },
+    {
+      "category": "Warranty Duration",
+      "development": {
+        "positive": 57,
+        "negative": 347
+      },
+      "holdout": {
+        "positive": 18,
+        "negative": 87
+      }
+    }
+  ],
+  "category_count": 41,
+  "split_contracts": {
+    "development": 404,
+    "holdout": 105
+  },
+  "pilot_contract_splits_preserved": 10,
+  "context_characters": {
+    "min": 645,
+    "max": 338211,
+    "total_unique": 26795113
+  },
+  "contracts_within_default_40000": 293,
+  "owner_legal_review": "pending",
+  "live_model_runs": "not measured by corpus preparation",
+  "files": {
+    "contracts.jsonl": "13a011342cc6b1c8614d03b42e103c67ad3a77e818b5cce2ffa61623b6d4bdf4",
+    "tasks.jsonl": "15e01bb2087eeb291c3c253caac638558dd58b99ef151a50f8489e6452c83631",
+    "contract_index.csv": "e42960350dc0382d7c55edd52f51663f1e4609d5154ab392333626b7d90da16d"
+  },
+  "pilot_manifest_sha256": "f7fdbf4587b84f1415a72e258485436a8cca60a9fd1f89b9c50d91db3751906e",
+  "selection_protocol_sha256": "feea8c57fad0a7d6a8c7f38f212dcdc9f864baee42db2ef54d4ef93722b0ee7e"
+}

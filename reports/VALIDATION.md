@@ -1,5 +1,27 @@
 # Validation record
 
+## v0.3.0 — full CUAD corpus, 2026-09-26
+
+- 51 offline tests passed locally; Ruff, compilation and evaluator self-check passed.
+- Complete pinned source processed: 510 records / 509 exact unique texts, 41 categories,
+  20,910 source tasks; every answer offset and presence flag validated.
+- One duplicate record suppressed from scoring; two conflicting unique category labels
+  quarantined, leaving 20,867 eligible tasks. Original annotations remain inspectable.
+- 404 development / 105 holdout contracts; all ten pilot assignments preserved, with
+  no exact-text overlap. Near-duplicate / issuer-family clustering remains unimplemented.
+- Two real-data development pages exported as local cases: 60 tasks covering all 41
+  categories without duplicate IDs. First 30 tasks frozen and exported reference-free.
+- The longest real contract (338,211 characters) selected, frozen, exported and read
+  back intact with explicit long-context opt-in; no model was invoked.
+- Regression fix: JSONL parsing now preserves Unicode line separators inside contracts.
+  Generated JSON/JSONL/CSV and tracked source line endings are deterministic across OSes.
+- Public metadata: [corpus summary](../data/corpus_summary.json),
+  [contract index](../data/corpus_index.csv), [validation evidence](CORPUS_VALIDATION.json).
+- New selection protocol is `cuad-full-corpus-v1`; original pilot prompt/rubric and
+  frozen manifests remain unchanged. Claude execution profiles now record the context cap.
+- **Live model calls: 0. Owner legal reviews: 0.** Source preparation and transport
+  fixtures do not constitute model benchmark results or customer delivery evidence.
+
 ## v0.2.0 — Claude Code transport, 2026-09-26
 
 - 40 offline unit/regression tests passed locally, including an actual Python subprocess standing

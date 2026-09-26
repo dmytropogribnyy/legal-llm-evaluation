@@ -7,6 +7,7 @@ from pathlib import Path
 from .claude_code import export_bundle, preflight, run_bundle
 from .common import canonical, digest, load_json, load_jsonl, save_json, write_jsonl
 from .dataset import fetch, prepare
+from .corpus import inspect_contract, make_batch, prepare_corpus
 from .evaluate import score_run
 from .report import export_report, validate_reviews
 from .runner import freeze, run_openai, verify_freeze
@@ -52,6 +53,20 @@ def main():
     sub.add_parser("fetch", help="Download and verify pinned public CUAD data")
     p = sub.add_parser("prepare", help="Build fixed contract-level split")
     p.add_argument("--out", default="data/prepared")
+    p = sub.add_parser("prepare-corpus", help="Catalog all CUAD contracts and categories locally")
+    p.add_argument("--out", default="data/prepared/full-cuad")
+    p = sub.add_parser("corpus-batch", help="Prepare a bounded full-contract evaluation batch")
+    p.add_argument("--corpus", default="data/prepared/full-cuad")
+    p.add_argument("--out", required=True)
+    p.add_argument("--split", choices=["development", "holdout"], default="development")
+    p.add_argument("--category", action="append")
+    p.add_argument("--offset", type=int, default=0)
+    p.add_argument("--limit", type=int, default=30)
+    p.add_argument("--max-context-characters", type=int, default=40000)
+    p = sub.add_parser("inspect-contract", help="Export full text and annotations for local inspection")
+    p.add_argument("--corpus", default="data/prepared/full-cuad")
+    p.add_argument("--contract-sha256", required=True)
+    p.add_argument("--out", required=True)
     p = sub.add_parser("freeze", help="Record prompt, protocol and case hashes")
     p.add_argument("--out", required=True)
     p.add_argument("--cases", default="data/prepared/cases.jsonl")
@@ -62,6 +77,7 @@ def main():
     p.add_argument("--frozen", required=True)
     p.add_argument("--split", choices=["development", "holdout"], default="development")
     p.add_argument("--out", required=True)
+    p.add_argument("--max-context-characters", type=int, default=40000)
     p = sub.add_parser("claude-doctor", help="Check CLI and subscription sign-in; no model calls")
     p.add_argument("--claude-bin", default="claude")
     p = sub.add_parser("run-claude", help="Evaluate through the official local Claude Code CLI")
@@ -85,6 +101,7 @@ def main():
             p.add_argument("--allow-paid", action="store_true")
             p.add_argument("--max-calls", type=int, required=True)
             p.add_argument("--max-output-tokens", type=int, default=1200)
+            p.add_argument("--max-context-characters", type=int, default=40000)
         else:
             p.add_argument("--responses", required=True)
     p = sub.add_parser("demo", help="Offline evaluator self-check; no model performance claim")
@@ -98,11 +115,20 @@ def main():
     elif args.command == "prepare":
         m = prepare(out=args.out)
         print(json.dumps({"contracts": m["contract_count"], "cases": m["case_count"]}))
+    elif args.command == "prepare-corpus":
+        summary = prepare_corpus(out=args.out)
+        print(json.dumps({k: summary[k] for k in ("source_document_records", "unique_contract_texts", "source_tasks", "category_count")}))
+    elif args.command == "corpus-batch":
+        print(json.dumps(make_batch(args.corpus, args.out, args.split, args.category,
+                                    args.offset, args.limit, args.max_context_characters), indent=2))
+    elif args.command == "inspect-contract":
+        print(json.dumps(inspect_contract(args.corpus, args.contract_sha256, args.out)))
     elif args.command == "freeze":
         freeze(load_jsonl(args.cases), args.prompt, args.out)
         print(args.out)
     elif args.command == "export-claude":
-        print(export_bundle(load_jsonl(args.cases), args.prompt, args.frozen, args.split, args.out))
+        print(export_bundle(load_jsonl(args.cases), args.prompt, args.frozen, args.split, args.out,
+                            max_context_characters=args.max_context_characters))
     elif args.command == "claude-doctor":
         print(json.dumps(preflight(args.claude_bin), indent=2))
     elif args.command == "run-claude":
@@ -121,7 +147,8 @@ def main():
         cases = [c for c in all_cases if c["split"] == args.split]
         if args.command == "run-openai":
             print(run_openai(cases, args.prompt, args.frozen, args.model, args.out,
-                             args.allow_paid, args.max_calls, args.max_output_tokens))
+                             args.allow_paid, args.max_calls, args.max_output_tokens,
+                             max_context_characters=args.max_context_characters))
         else:
             responses = load_jsonl(args.responses)
             report = score_run(cases, responses, frozen["prompt_sha256"])

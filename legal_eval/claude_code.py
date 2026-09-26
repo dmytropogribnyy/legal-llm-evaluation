@@ -12,6 +12,7 @@ from pathlib import Path
 
 from .common import canonical, digest, load_json, save_json, timestamp
 from .runner import provider_input, verify_freeze
+from .corpus import context_limit
 
 
 PROFILE = "claude-code-subscription-v1"
@@ -24,15 +25,16 @@ BLOCKED_ENV = (
 
 
 def export_bundle(cases, prompt_file, frozen_file, split, out,
-                  rubric_file="docs/EVALUATION_PROTOCOL.md"):
+                  rubric_file="docs/EVALUATION_PROTOCOL.md", max_context_characters=40000):
     """Export only input text and opaque bindings; no labels, spans or rubric."""
+    context_limit(max_context_characters)
     frozen = verify_freeze(cases, prompt_file, frozen_file, rubric_file,
                            require_complete=True)
     selected = [c for c in cases if c["split"] == split]
     if split not in ("development", "holdout") or not 1 <= len(selected) <= 30:
         raise ValueError("Select a non-empty development or holdout split, at most 30 tasks")
-    if any(len(c["context"]) > 40_000 for c in selected):
-        raise ValueError("Contract exceeds 40,000 characters; no silent truncation")
+    if any(len(c["context"]) > max_context_characters for c in selected):
+        raise ValueError("Contract exceeds selected context character limit; no silent truncation")
     out = Path(out)
     out.mkdir(parents=True, exist_ok=False)
     (out / "prompt.txt").write_bytes(Path(prompt_file).read_bytes())
@@ -44,6 +46,7 @@ def export_bundle(cases, prompt_file, frozen_file, split, out,
         entries.append({"file": filename, "input_sha256": digest(payload),
                         "case_id": case["case_id"], "case_sha256": case["case_sha256"]})
     manifest = {"format": "claude-input-bundle-v1", "split": split,
+                "max_context_characters": max_context_characters,
                 "created_at": timestamp(), "prompt_sha256": frozen["prompt_sha256"],
                 "freeze_sha256": digest(Path(frozen_file).read_bytes()), "tasks": entries}
     save_json(out / "bundle.json", manifest)
@@ -56,6 +59,7 @@ def read_bundle(folder):
     if (manifest.get("format") != "claude-input-bundle-v1"
             or manifest.get("split") not in ("development", "holdout")):
         raise ValueError("Unsupported input bundle")
+    max_context_characters = context_limit(manifest.get("max_context_characters", 40000))
     prompt = (folder / "prompt.txt").read_bytes()
     if digest(prompt) != manifest["prompt_sha256"]:
         raise ValueError("Bundle prompt hash mismatch")
@@ -75,7 +79,7 @@ def read_bundle(folder):
         if (digest(raw) != task["input_sha256"]
                 or set(payload) != {"question", "contract"}
                 or not all(isinstance(v, str) and v.strip() for v in payload.values())
-                or len(payload["contract"]) > 40_000):
+                or len(payload["contract"]) > max_context_characters):
             raise ValueError("Bundle input changed, contains extra fields or exceeds limits")
         inputs.append(raw.decode("utf-8"))
     return manifest, prompt, inputs
@@ -177,6 +181,7 @@ def run_bundle(bundle, model, out, max_invocations, allow_subscription_usage=Fal
     save_json(out / "input_manifest.json", manifest)
     profile = {"profile": PROFILE, "model": model, "effort": effort,
                "max_turns_per_invocation": 1, "timeout_seconds": timeout,
+               "max_context_characters": manifest.get("max_context_characters", 40000),
                "argv_template": command("claude", "PROMPT_FILE", model, effort)}
     profile_hash = digest(canonical(profile))
     metadata = {"started_at": timestamp(), "status": "running", "provider": "claude_code_cli",

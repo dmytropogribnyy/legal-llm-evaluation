@@ -27,15 +27,15 @@ def load_json(path):
 def save_json(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
 
 
 def load_jsonl(path):
-    return [json.loads(line) for line in Path(path).read_text(encoding="utf-8").splitlines()
+    return [json.loads(line) for line in Path(path).read_text(encoding="utf-8").split("\n")
             if line.strip()]
 
 
 def write_jsonl(path, rows):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("".join(canonical(row) + "\n" for row in rows), encoding="utf-8")
+    path.write_text("".join(canonical(row) + "\n" for row in rows), encoding="utf-8", newline="\n")

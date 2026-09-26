@@ -147,3 +147,12 @@ controls are separate from `--no-session-persistence`, which concerns local CLI 
 
 Authentication metadata fields are compatibility checks, not a billing guarantee. This is an
 owner-operated local evaluation workflow; it is not a service for sharing subscription access.
+
+## Full CUAD corpus (v0.3.0)
+
+The steps above reproduce the original 30-task pilot. For all 509 unique texts and
+41 categories, use the [full-corpus guide](FULL_CORPUS_GUIDE.md). It prepares small
+versioned batches, freezes them and exports the same reference-free bundle format.
+The default 40,000-character cap remains; an explicit `--max-context-characters 400000`
+at batch selection and export allows long full contracts without truncation. Model
+context and account usage limits still need to be checked before live execution.
