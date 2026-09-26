@@ -24,9 +24,10 @@ on an AI assistant to identify liability caps, termination-for-convenience claus
 | Human review | Legal accuracy, material omissions, unsupported reasoning, uncertainty, severity and acceptance |
 | Governance work | Intended-use assessment, applicability worksheet, evidence map, risk register and gaps |
 
-**Status — 26 September 2026:** data preparation, offline evaluation, reports, review templates and a
-bounded OpenAI adapter are implemented. Public-source hashes and the fixed selection have been
-verified. **Live model comparison and owner legal review have not yet been performed.**
+**Status — 26 September 2026 · v0.2.0:** data preparation, offline evaluation, reports, review templates,
+an OpenAI adapter and a local Claude Code subscription adapter are implemented. Public-source hashes
+and the fixed selection have been verified. Both transports have offline test coverage;
+**live model acceptance, comparison and owner legal review have not yet been performed.**
 The [validation record](reports/VALIDATION.md) separates completed checks from remaining work.
 
 ## What an engagement delivers
@@ -66,7 +67,22 @@ The source is hash-verified before use. Contract texts, reference answers, paid 
 sheets remain in ignored local directories. The public [selection manifest](data/selection_manifest.json)
 contains IDs, source references and hashes, without redistributing the full contracts.
 
-## Run a real model
+## Use Claude Code in VS Code
+
+Use the official native Claude Code CLI with your existing Pro/Max login. The workflow exports
+reference-free input bundles, starts a fresh restricted CLI session for each task, preserves original
+responses and feeds them to the same evaluator. It requires an explicit model ID and usage opt-in.
+
+**[Step-by-step PowerShell instructions](docs/CLAUDE_CODE.md)** cover preparation, subscription
+preflight, nine development tasks, scoring and human review. No separate Anthropic API key is used.
+Account limits and any enabled extra usage still apply. Run inference from an ordinary VS Code
+terminal, outside the coding agent's own session. The VS Code **Run Task** menu also includes offline
+tests and the no-inference subscription preflight.
+
+This measures a declared Claude Code configuration. Its CLI receipts use `imported` provenance;
+they are not labeled as direct API calls. Keep the input/output artifacts under ignored `runs/`.
+
+## Use the OpenAI API
 
 Install the optional adapter and provide `OPENAI_API_KEY` through your local environment.
 No key is read from a repository file.
@@ -116,6 +132,7 @@ legal judgment. Other providers can be evaluated using the documented [response 
 | [Evaluation protocol](docs/EVALUATION_PROTOCOL.md) | Sampling, metrics, rubric and interpretation |
 | [Data provenance](docs/DATA_CARD.md) | CUAD attribution, licenses, selection and limitations |
 | [Operator runbook](docs/RUNBOOK.md) | Execution, comparison, review and evidence release |
+| [Claude Code / VS Code guide](docs/CLAUDE_CODE.md) | Subscription workflow, context separation and PowerShell commands |
 | [AI Act readiness](docs/AI_ACT_READINESS.md) | Applicability, controls, evidence and gaps |
 | [Risk register](docs/RISK_REGISTER.csv) | Material failure modes and proposed mitigation |
 | [Delivery report template](templates/DELIVERY_REPORT.md) | Client-facing report structure |

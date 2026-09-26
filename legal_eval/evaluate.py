@@ -91,7 +91,10 @@ def score_run(cases, responses, expected_prompt_sha256=None):
             raise ValueError("Prompt differs from the frozen protocol")
         if response.get("provenance") not in ("live_api", "imported", "synthetic_fixture"):
             raise ValueError("Explicit response provenance is required")
-        run_keys.add((response["model"], response["prompt_sha256"], response["provenance"]))
+        profile = response.get("execution_profile_sha256", "")
+        if response.get("provider") == "claude_code_cli" and not profile:
+            raise ValueError("Claude Code responses need an execution profile binding")
+        run_keys.add((response["model"], response["prompt_sha256"], response["provenance"], profile))
         if response.get("error"):
             row = assess(case, "")
             row["flags"] = ["provider_error"]
@@ -100,7 +103,7 @@ def score_run(cases, responses, expected_prompt_sha256=None):
         row["response_sha256"] = digest(canonical(response))
         rows.append(row)
     if len(run_keys) > 1:
-        raise ValueError("Mixed model, prompt or provenance: use separate reports")
+        raise ValueError("Mixed model, prompt, provenance or execution profile: use separate reports")
     for case_id in sorted(set(index) - seen):
         row = assess(index[case_id], "")
         row["flags"] = ["missing_response"]

@@ -7,6 +7,7 @@
 - Validate output structure, quote support and agreement with source labels.
 - Preserve errors and missing tasks; generate reports and response-bound review sheets.
 - Provide a bounded optional provider adapter and offline regression checks.
+- Provide a Claude Code Pro/Max CLI adapter, reference-free bundles and a VS Code operator guide.
 - Draft the engagement brief, human rubric and conditional AI Act evidence mapping.
 
 ## Stage 2 — owner legal review
@@ -18,7 +19,9 @@ mapping against the current applicable legislation; no signature is pre-filled.
 
 ## Stage 3 — measured model pilot
 
-Choose exact model IDs and a bounded spending allowance. Run development tasks, finalize the prompt,
+Choose exact model IDs and a bounded API or subscription usage scope. First validate the actual
+provider/CLI on the owner's machine; offline tests do not establish live compatibility.
+Run development tasks, finalize the prompt,
 then evaluate two models against the same holdout. Initial comparison: 42 holdout responses,
 plus at least 18 development responses if both models are used there. Repeats cost extra and must
 be separately identified. Keep actual output/usage records; inspect incomplete responses.

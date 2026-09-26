@@ -24,6 +24,15 @@ development, disclose that exposure and select a new confirmation set.
 
 ## 3. Execute within a declared scope
 
+For an existing Claude Code Pro/Max subscription, use the dedicated
+[VS Code guide](CLAUDE_CODE.md). Its `export-claude` and `run-claude` commands preserve input/response
+bindings without putting reference answers in the evaluated session. `claude-doctor` checks the
+native CLI and sanitized authentication metadata. This transport limits CLI invocations, not internal
+provider calls; its outputs use `imported` provenance and a versioned execution profile. Run each
+configuration separately. Do not treat its reported cost estimate as a subscription invoice.
+
+For direct OpenAI API evaluation:
+
 Install the optional OpenAI adapter only for live calls. Set `OPENAI_API_KEY` through your shell or
 local secret manager. No `.env` loading is performed. Use the exact available model ID appropriate
 to your account. The adapter uses the Responses API, JSON output mode, no tools or browsing,
@@ -57,7 +66,7 @@ One JSONL record per case:
 These are placeholders, not model results. Preserve original provider export, timestamp, settings,
 request/response IDs and usage next to imported records. Import provenance is declared, not
 independently authenticated. Synthetic fixtures must use `synthetic_fixture`. Mixed model/prompt/
-provenance reports, duplicate IDs, unknown IDs and stale case/prompt hashes are rejected.
+provenance/execution-profile reports, duplicate IDs, unknown IDs and stale case/prompt hashes are rejected.
 
 ## 5. Score and review
 

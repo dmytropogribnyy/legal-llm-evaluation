@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Legal Eval: offline tests",
+      "type": "process",
+      "command": "python",
+      "args": ["-m", "unittest", "discover", "-s", "tests", "-v"],
+      "options": {"cwd": "${workspaceFolder}"},
+      "problemMatcher": [],
+      "group": "test"
+    },
+    {
+      "label": "Legal Eval: Claude subscription preflight (no inference)",
+      "type": "process",
+      "command": "python",
+      "args": ["-m", "legal_eval", "claude-doctor"],
+      "options": {"cwd": "${workspaceFolder}"},
+      "problemMatcher": []
+    }
+  ]
+}

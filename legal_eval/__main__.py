@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from .claude_code import export_bundle, preflight, run_bundle
 from .common import canonical, digest, load_json, load_jsonl, save_json, write_jsonl
 from .dataset import fetch, prepare
 from .evaluate import score_run
@@ -55,6 +56,23 @@ def main():
     p.add_argument("--out", required=True)
     p.add_argument("--cases", default="data/prepared/cases.jsonl")
     p.add_argument("--prompt", default="prompts/extract_v1.txt")
+    p = sub.add_parser("export-claude", help="Create a reference-free Claude Code input bundle")
+    p.add_argument("--cases", default="data/prepared/cases.jsonl")
+    p.add_argument("--prompt", default="prompts/extract_v1.txt")
+    p.add_argument("--frozen", required=True)
+    p.add_argument("--split", choices=["development", "holdout"], default="development")
+    p.add_argument("--out", required=True)
+    p = sub.add_parser("claude-doctor", help="Check CLI and subscription sign-in; no model calls")
+    p.add_argument("--claude-bin", default="claude")
+    p = sub.add_parser("run-claude", help="Evaluate through the official local Claude Code CLI")
+    p.add_argument("--bundle", required=True)
+    p.add_argument("--model", required=True)
+    p.add_argument("--out", required=True)
+    p.add_argument("--max-invocations", type=int, required=True)
+    p.add_argument("--allow-subscription-usage", action="store_true")
+    p.add_argument("--effort", choices=["low", "medium", "high"], default="medium")
+    p.add_argument("--timeout", type=int, default=180)
+    p.add_argument("--claude-bin", default="claude")
     for name in ("run-openai", "score"):
         p = sub.add_parser(name)
         p.add_argument("--cases", default="data/prepared/cases.jsonl")
@@ -83,6 +101,16 @@ def main():
     elif args.command == "freeze":
         freeze(load_jsonl(args.cases), args.prompt, args.out)
         print(args.out)
+    elif args.command == "export-claude":
+        print(export_bundle(load_jsonl(args.cases), args.prompt, args.frozen, args.split, args.out))
+    elif args.command == "claude-doctor":
+        print(json.dumps(preflight(args.claude_bin), indent=2))
+    elif args.command == "run-claude":
+        result = run_bundle(args.bundle, args.model, args.out, args.max_invocations,
+                            args.allow_subscription_usage, args.effort, args.timeout, args.claude_bin)
+        print(result)
+        if load_json(Path(args.out) / "run.json")["status"] != "completed":
+            raise SystemExit("Run stopped on an error; retained results must be scored as partial")
     elif args.command == "demo":
         print(json.dumps(demo(args.out), indent=2))
     elif args.command == "validate-review":

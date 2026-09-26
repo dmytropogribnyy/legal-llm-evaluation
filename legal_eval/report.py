@@ -21,7 +21,8 @@ def export_report(report, out):
     label = run[2] if run else "no_responses"
     title = "Evaluator self-check" if label == "synthetic_fixture" else "Automated evaluation report"
     lines = [f"# {title}", "", f"**Response provenance:** {label}",
-             f"**Model label:** {run[0] if run else 'none'}", "",
+             f"**Model label:** {run[0] if run else 'none'}",
+             f"**Execution profile SHA-256:** {run[3] if run and len(run) > 3 and run[3] else 'not supplied'}", "",
              "Human legal review is pending. These metrics do not establish legal correctness,",
              "model superiority, client acceptance, or EU AI Act compliance.", "",
              "| Metric | Value |", "|---|---|"]

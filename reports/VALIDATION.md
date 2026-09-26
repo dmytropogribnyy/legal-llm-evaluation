@@ -1,4 +1,21 @@
-# Initial validation record
+# Validation record
+
+## v0.2.0 — Claude Code transport, 2026-09-26
+
+- 40 offline unit/regression tests passed locally, including an actual Python subprocess standing
+  in for the external CLI. This fixture is explicitly not Claude inference.
+- Tests cover reference-free export, changed input hashes, unexpected gold fields, manifest path
+  traversal, usage/cap/model guards, subscription auth metadata, rejected provider overrides,
+  fresh task directories, raw receipt preservation, timeout/error stop behavior and profile mixing.
+- CI now defines Ubuntu/Windows with Python 3.11/3.12. Check the commit's actual Actions result
+  before claiming any particular matrix job passed.
+- Source selection, extraction prompt, legal rubric and metric formulas are unchanged. A separate
+  versioned execution profile records the new CLI transport; pooling distinct profiles is rejected.
+- **Real Claude Code invocations: 0. Windows native CLI / Pro/Max live acceptance: pending.**
+- **Owner legal review and model comparison: pending.** No owner credentials were accessed and no
+  API/subscription model usage was consumed while implementing the adapter.
+
+## v0.1.0 — initial foundation
 
 **Date:** 2026-09-26 · **Release:** 0.1.0 technical foundation.
 
