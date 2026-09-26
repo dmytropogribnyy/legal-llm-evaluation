@@ -1,0 +1,11 @@
+risk_id,failure_mode,impact,proposed_control,evidence,current_gap,owner,status
+R01,Invented contract provision,Incorrect legal conclusion,Check source quotes and review reasoning,Automated flags plus human review sheet,Semantic review pending,Dmytro Pogribnyy,open
+R02,Missed qualification or exception,Wrong assessment of exposure,Review completeness against full source,Reference overlap diagnostic plus rubric,Live outputs and expert review pending,Dmytro Pogribnyy,open
+R03,False absence,Relevant right or obligation overlooked,Keep negative-label uncertainty explicit,Presence flags and source adjudication record,Publisher labels not yet owner reviewed,Dmytro Pogribnyy,open
+R04,Prompt injection in source,Output diverted from evaluation task,Treat contract as untrusted data and disable tools,Prompt and provider input allowlist,Adversarial robustness suite not implemented,Dmytro Pogribnyy,open
+R05,Development leakage,Optimistic reported performance,Split by contract and freeze final protocol,Selection manifest and freeze hashes,Public training exposure unknown,Dmytro Pogribnyy,partial
+R06,Cherry-picked or missing outputs,Inflated performance,Count all expected cases and preserve errors,Scorer missing-response and duplicate checks,Execution records not independently authenticated,Dmytro Pogribnyy,partial
+R07,Client confidentiality breach,Unauthorized disclosure,Use public data in pilot and private approved client workspace,Ignored raw data and run folders,Client data terms not assessed,Dmytro Pogribnyy,open
+R08,Wrong regulatory classification,Inappropriate compliance claims,Assess intended use and organization role first,AI Act applicability worksheet,Deployment-specific assessment pending,Dmytro Pogribnyy,open
+R09,Provider or model change,Noncomparable results,Record exact returned model and protocol,Run metadata and hashes,Live acceptance pending,Dmytro Pogribnyy,open
+R10,Unbounded spend,Unexpected API charges,Require explicit paid flag and call/token caps,Runner guards and attempt log,Dollar pricing and allowance not configured,Dmytro Pogribnyy,partial
